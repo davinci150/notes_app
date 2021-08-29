@@ -34,12 +34,12 @@ class _TasksWidgetState extends State<TasksWidget> {
       child: const TasksWidgetBody(),
     );
   }
+
   @override
-    Future<void> dispose() async{
-           super.dispose();
-   await _model.dispose();
- 
-    }
+  Future<void> dispose() async {
+    super.dispose();
+    await _model.dispose();
+  }
 }
 
 class TasksWidgetBody extends StatelessWidget {
@@ -50,6 +50,7 @@ class TasksWidgetBody extends StatelessWidget {
     final model = TasksWidgetModelProvider.watch(context)?.model;
     final title = model.configuration.title ?? 'tasks';
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(title),
       ),

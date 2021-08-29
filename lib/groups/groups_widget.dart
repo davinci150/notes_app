@@ -59,7 +59,7 @@ class _GroupWidgetBody extends StatelessWidget {
           ),
         ),
         body: const Padding(
-          padding: EdgeInsets.only(top: 10),
+          padding: EdgeInsets.only(top: 10,left: 10,right: 10),
           child: _GroupListWidget(),
         ),
         floatingActionButton: FloatingActionButton(
@@ -157,8 +157,8 @@ class __GroupListRowWidgetState extends State<_GroupListRowWidget> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
-        color: const Color(0xFF1f1f1f),
-        // color:  Color(0xFF001B2C).opacity(14),
+        // color: const Color(0xFF1f1f1f),
+        color:  Color(0xFF001B2C).withOpacity(0.5),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
