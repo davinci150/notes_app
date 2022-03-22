@@ -23,7 +23,7 @@ class GroupFormWidgetModel extends ChangeNotifier {
     }
 
     final box = await BoxManager.instance.openGroupBox();
-    final group = Group(name: groupName);
+    final group = Group(name: groupName, isDone: false);
     await box.add(group);
     await BoxManager.instance.closeBox(box);
     Navigator.of(context).pop();

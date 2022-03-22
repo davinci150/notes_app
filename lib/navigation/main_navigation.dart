@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/ads/ad_screen.dart';
+import 'package:notes_app/main.dart';
 import '../group_form/group_form_widget.dart';
 import '../groups/groups_widget.dart';
 import '../task_form/task_form_widget.dart';

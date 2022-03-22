@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:notes_app/group_form/group_form_widget.dart';
+import 'package:notes_app/group_form/group_form_widget_model.dart.dart';
 import 'package:pedantic/pedantic.dart';
 
 import '../domain/data_provider/box_manager.dart';
@@ -19,25 +21,42 @@ class GroupsWidgetModel extends ChangeNotifier {
   List<Group> get groups => _groups.toList();
 
   void showForm(BuildContext context) {
-    Navigator.of(context).pushNamed(MainNavigationRouteNames.groupsForm);
+    // Navigator.of(context).pushNamed(MainNavigationRouteNames.groupsForm);
+    showModal(context);
+    // Navigator.pushNamed(context, MainNavigationRouteNames.groupsForm);
+    // const GroupFormWidget();
   }
 
   Future<void> showTasks(BuildContext context, int groupIndex) async {
-
     final group = (await _box).getAt(groupIndex);
-    if(group != null){
-      final configuration = TasksWidgetConfiguration(groupKey: group.key as int, title: group.name);
-    unawaited(Navigator.of(context)
-        .pushNamed(MainNavigationRouteNames.tasks, arguments: configuration));
-        }
+    if (group != null) {
+      final configuration = TasksWidgetConfiguration(
+          groupKey: group.key as int, title: group.name);
+      unawaited(Navigator.of(context)
+          .pushNamed(MainNavigationRouteNames.tasks, arguments: configuration));
+    }
+  }
 
+  void showModal(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return const GroupFormWidget();
+      },
+    );
+  }
+
+  Future<void> doneToogle(int groupIndex) async {
+    final group = (await _box).getAt(groupIndex);
+    group?.isDone = !group.isDone;
+    await group?.save();
   }
 
   Future<void> deleteGroup(int groupIndex) async {
     final box = await _box;
-     final groupKey = (await _box).keyAt(groupIndex) as int;
-   final taskBoxName =  BoxManager.instance.makeTaskBoxName(groupKey);
-   await Hive.deleteBoxFromDisk(taskBoxName);
+    final groupKey = (await _box).keyAt(groupIndex) as int;
+    final taskBoxName = BoxManager.instance.makeTaskBoxName(groupKey);
+    await Hive.deleteBoxFromDisk(taskBoxName);
 
     await box.deleteAt(groupIndex);
   }
@@ -51,15 +70,16 @@ class GroupsWidgetModel extends ChangeNotifier {
     _box = BoxManager.instance.openGroupBox();
 
     await _readGroupsFromHive();
-_listenableBox = (await _box).listenable();
+    _listenableBox = (await _box).listenable();
     _listenableBox?.addListener(_readGroupsFromHive);
   }
+
   @override
-    Future<void> dispose()async {
-      _listenableBox.removeListener(_readGroupsFromHive);
-     await BoxManager.instance.closeBox(await _box);
-      super.dispose();
-    }
+  Future<void> dispose() async {
+    _listenableBox.removeListener(_readGroupsFromHive);
+    await BoxManager.instance.closeBox(await _box);
+    super.dispose();
+  }
 }
 
 class GroupsWidgetModelProvider extends InheritedNotifier {

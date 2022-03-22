@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:notes_app/ads/ad_state.dart';
+import 'package:provider/provider.dart';
 
 import 'tasks_widget_model.dart';
 
@@ -70,18 +73,22 @@ class _TasksListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final groupsCount =
         TasksWidgetModelProvider.watch(context)?.model?.tasks?.length ?? 0;
-    return ListView.separated(
-      itemCount: groupsCount,
-      separatorBuilder: (BuildContext context, int index) {
-        return const Divider(
-          height: 3,
-        );
-      },
-      itemBuilder: (BuildContext context, int index) {
-        return _TaskListRowWidget(
-          indexInList: index,
-        );
-      },
+    return Stack(
+      children: [
+        ListView.separated(
+          itemCount: groupsCount,
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              height: 3,
+            );
+          },
+          itemBuilder: (BuildContext context, int index) {
+            return _TaskListRowWidget(
+              indexInList: index,
+            );
+          },
+        ),
+      ],
     );
   }
 }
@@ -107,8 +114,10 @@ class _TaskListRowWidget extends StatelessWidget {
           child: Row(
             children: [
               Checkbox(
+                  shape: const CircleBorder(),
                   checkColor: Colors.black,
-                  activeColor: Colors.grey,
+                  activeColor: Colors.white,
+                  hoverColor: Colors.red,
                   focusColor: Colors.red,
                   value: task.isDone,
                   onChanged: (value) => model.doneToogle(indexInList)
